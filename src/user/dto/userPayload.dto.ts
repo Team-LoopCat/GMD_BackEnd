@@ -1,6 +1,6 @@
 import { IsNumber } from 'class-validator';
 
-export class userPayload {
+export class UserPayload {
   @IsNumber()
   userID: number;
 }

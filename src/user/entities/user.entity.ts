@@ -1,20 +1,16 @@
-import { Length } from 'class-validator';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   userID: number;
 
-  @Column({ type: 'varchar', nullable: false })
-  @Length(2, 50)
+  @Column({ unique: true })
   userName: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  @Length(1, 150)
+  @Column()
   password: string;
 
-  @Column({ type: 'varchar', nullable: false, default: 'user' })
-  @Length(3, 6)
+  @Column({ default: 'user' })
   role: string;
 }
