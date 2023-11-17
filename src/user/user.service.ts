@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   ConflictException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -14,14 +13,18 @@ import { UserPayload } from './dto/userPayload.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/createUser.dto';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class UserService {
   constructor(
+    @InjectRedis() private readonly redis: Redis,
     @InjectRepository(User) private userEntity: Repository<User>,
     private jwt: JwtService,
   ) {}
 
+  // 유저 생성 (관리자 전용)
   async createAcc(userDto: CreateUserDto): Promise<object> {
     const { userName, password, role } = userDto;
 
@@ -58,26 +61,30 @@ export class UserService {
 
     const payload = { userID: user.userID };
 
-    const accessToken = this.createAccess(payload);
+    const accessToken = await this.createAccess(payload);
+
+    await this.redis.set(`${user.userID}accessToken`, accessToken);
 
     return { accessToken };
   }
 
   // 로그아웃
   async logout(token: string) {
-    const thisUser = this.validateAccess(token);
+    const { userID } = await this.validateAccess(token);
+    await this.redis.del(`${userID}accessToken`);
   }
 
   // access-token 생성
   async createAccess(userDto: UserPayload): Promise<string> {
-    const token = await this.jwt.sign(userDto, {
+    const accessToken = await this.jwt.sign(userDto, {
       secret: process.env.SECRET,
     });
-    return token;
+
+    return accessToken;
   }
 
   // 토큰 검증
-  async validateAccess(token: string): Promise<object> {
+  async validateAccess(token: string): Promise<UserPayload> {
     const userData = await this.jwt.verify(token, {
       secret: process.env.SECRET,
     });
