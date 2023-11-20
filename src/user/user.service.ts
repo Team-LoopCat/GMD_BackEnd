@@ -59,7 +59,7 @@ export class UserService {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new ConflictException('비밀번호 불일치');
 
-    const payload = { userID: user.userID };
+    const payload = { userID: user.userID, role: user.role };
 
     const accessToken = await this.createAccess(payload);
 
