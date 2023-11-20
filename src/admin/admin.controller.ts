@@ -1,4 +1,4 @@
-import { Controller, Get, Headers } from '@nestjs/common';
+import { Controller, Get, Headers, Param } from '@nestjs/common';
 import { AdminService } from './admin.service';
 
 @Controller('/admin')
@@ -14,5 +14,16 @@ export class AdminController {
       statuCode: 200,
       message: '데이터 조회 성공',
     });
+  }
+
+  @Get('/divice/:stuID')
+  async getDiviceInfo(@Headers('access_token') token: string, @Param('stuID') stuID : number) {
+    const data = await this.adminService.getDiviceInfo(token, stuID);
+
+    return Object.assign({
+        data,
+        statusCode: 200,
+        message: "디바이스 정보 불러오기 성공"
+    })
   }
 }
