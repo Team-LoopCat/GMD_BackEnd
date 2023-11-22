@@ -4,17 +4,17 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Student } from './entites/student.entity';
+import { Student } from './entities/student.entity';
 import { Repository } from 'typeorm';
-import { Divice } from './entites/divice.entity';
-import { DiviceStatus } from './entites/diviceStatus.entity';
+import { Divice } from './entities/divice.entity';
+import { DiviceStatus } from './entities/diviceStatus.entity';
 import { UserService } from 'src/user/user.service';
+import { UpdateDiviceDto } from './dto/updateDivice.dto';
 
 @Injectable()
 export class AdminService {
   constructor(
-    @InjectRepository(DiviceStatus)
-    private diviceStatus: Repository<DiviceStatus>,
+    @InjectRepository(DiviceStatus) private diviceStatus: Repository<DiviceStatus>,
     @InjectRepository(Student) private student: Repository<Student>,
     @InjectRepository(Divice) private divice: Repository<Divice>,
     private readonly userService: UserService,
@@ -53,5 +53,19 @@ export class AdminService {
     if (!diviceStatus) throw new NotFoundException('존재하지 않는 학생');
 
     return diviceStatus;
+  }
+
+  async updateDivice(token: string, stuID: number, updateDiviceDto: UpdateDiviceDto) {
+    const { phone, schoolLaptop, personalLaptop, tablet } = updateDiviceDto;
+
+    const user = await this.userService.validateAccess(token);
+    if (user.role != 'admin') throw new ForbiddenException('어드민 계정이 아님');
+    
+    await this.divice.update(stuID, {
+      phone,
+      schoolLaptop,
+      personalLaptop,
+      tablet,
+    });
   }
 }
