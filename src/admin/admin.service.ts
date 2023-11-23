@@ -49,7 +49,7 @@ export class AdminService {
   async getDiviceInfo(token: string, stuID: number): Promise<object> {
     const userData = await this.userService.validateAccess(token);
     if (userData.role != 'admin') throw new ForbiddenException('Admin이 아님');
-    const diviceStatus = await this.divice.find({ where: { stuID } });
+    const diviceStatus = await this.divice.findOneBy({ stuID });
     if (!diviceStatus) throw new NotFoundException('존재하지 않는 학생');
 
     return diviceStatus;
