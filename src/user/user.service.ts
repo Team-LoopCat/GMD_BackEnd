@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -31,22 +25,17 @@ export class UserService {
     const user = await this.userEntity.findOneBy({ userName });
     if (user) throw new ConflictException('이미 같은 이름의 계정이 존재함');
 
-    if (role != 'admin' && role != 'user')
-      throw new BadRequestException('알수 없는 역할');
+    if (role != 'admin' && role != 'user') throw new BadRequestException('알수 없는 역할');
 
     const hashedPW = await bcrypt.hash(password, 10);
 
-    await this.userEntity.save({
+    const newUser = await this.userEntity.save({
       userName,
       password: hashedPW,
       role,
     });
 
-    return {
-      userName,
-      password: hashedPW,
-      role,
-    };
+    return newUser;
   }
 
   // 로그인
