@@ -14,5 +14,5 @@ export class Student {
 
   @Column()
   @OneToOne(() => Gender, (gender) => gender.genderID)
-  gender: string;
+  gender: number;
 }
