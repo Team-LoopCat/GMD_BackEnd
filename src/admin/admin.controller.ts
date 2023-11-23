@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Headers, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Patch, Post } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { UpdateDiviceDto } from './dto/updateDivice.dto';
+import { CreateStudentDto } from './dto/createStudentDto';
 
 @Controller('/admin')
 export class AdminController {
@@ -18,23 +19,34 @@ export class AdminController {
   }
 
   @Get('/divice/:stuID')
-  async getDiviceInfo(@Headers('access_token') token: string, @Param('stuID') stuID : number) {
+  async getDiviceInfo(@Headers('access_token') token: string, @Param('stuID') stuID: number) {
     const data = await this.adminService.getDiviceInfo(token, stuID);
 
     return Object.assign({
-        data,
-        statusCode: 200,
-        message: "디바이스 정보 불러오기 성공"
-    })
+      data,
+      statusCode: 200,
+      message: '디바이스 정보 불러오기 성공',
+    });
   }
 
   @Patch('/divice/:stuID')
-  async updateDivice(@Headers('access_token') token: string, @Param('stuID') stuID : number, @Body() updateDiviceDto : UpdateDiviceDto) {
+  async updateDivice(@Headers('access_token') token: string, @Param('stuID') stuID: number, @Body() updateDiviceDto: UpdateDiviceDto) {
     this.adminService.updateDivice(token, stuID, updateDiviceDto);
 
     return Object.assign({
       statusCode: 200,
-      message: "디바이스 업데이트",
+      message: '디바이스 업데이트',
+    });
+  }
+
+  @Post('/student/add')
+  async createStudent(@Headers('access_token') token: string, @Body() createStudentDto: CreateStudentDto) {
+    const data = await this.adminService.addStudent(token, createStudentDto);
+
+    return Object.assign({
+      data,
+      statusCode: 201,
+      message: '학생 추가에 성공했습니다.',
     });
   }
 }
