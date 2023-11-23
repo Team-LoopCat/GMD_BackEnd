@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Patch, Post } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { UpdateDiviceDto } from './dto/updateDivice.dto';
 import { CreateStudentDto } from './dto/createStudentDto';
@@ -47,6 +47,15 @@ export class AdminController {
       data,
       statusCode: 201,
       message: '학생 추가에 성공했습니다.',
+    });
+  }
+
+  @Delete('/student/:stuID')
+  async deleteStudent(@Headers('access_token') token: string, @Param('stuID') stuID: number) {
+    await this.adminService.deleteStudent(token, stuID);
+
+    return Object.assign({
+      statusCode: 204,
     });
   }
 }

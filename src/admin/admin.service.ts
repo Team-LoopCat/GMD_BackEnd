@@ -85,4 +85,16 @@ export class AdminService {
 
     return newStudent;
   }
+
+  async deleteStudent(token: string, stuID: number) {
+    const user = await this.userService.validateAccess(token);
+    if (user.role != 'admin') throw new ForbiddenException('Admin이 아님');
+
+    const thisStudent = await this.student.findOneBy({ stuID });
+    if (!thisStudent) throw new NotFoundException('존재하지 않는 학생');
+
+    await this.divice.delete({ stuID });
+    await this.diviceStatus.delete({ stuID });
+    await this.student.delete({ stuID });
+  }
 }
