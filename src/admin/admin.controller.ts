@@ -58,4 +58,15 @@ export class AdminController {
       statusCode: 204,
     });
   }
+
+  @Get('/student/divicestatus/:stuID')
+  async getDiviceStatus(@Headers('access_token') token: string, @Param('stuID') stuID: number) {
+    const data = await this.adminService.getDiviceStatus(token, stuID);
+
+    return Object.assign({
+      data,
+      statusCode: 200,
+      message: '조회에 성공했습니다',
+    });
+  }
 }
