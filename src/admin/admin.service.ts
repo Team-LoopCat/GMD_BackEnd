@@ -97,4 +97,13 @@ export class AdminService {
     await this.diviceStatus.delete({ stuID });
     await this.student.delete({ stuID });
   }
+
+  async getDiviceStatus(token: string, stuID: number): Promise<object> {
+    const user = await this.userService.validateAccess(token);
+    if (user.role != 'admin') throw new ForbiddenException('admin이 아님');
+    const thisDiviceStatus = await this.diviceStatus.findOneBy({ stuID });
+    if (!thisDiviceStatus) throw new NotFoundException('존재하지 않는 학생');
+
+    return thisDiviceStatus;
+  }
 }
