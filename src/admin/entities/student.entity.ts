@@ -15,4 +15,7 @@ export class Student {
   @Column()
   @OneToOne(() => Gender, (gender) => gender.genderID)
   gender: number;
+
+  @Column()
+  boxID: number;
 }

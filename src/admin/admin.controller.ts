@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Headers, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Patch, Post, Query } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { UpdateDiviceDto } from './dto/updateDivice.dto';
 import { CreateStudentDto } from './dto/createStudent.dto';
@@ -67,6 +67,17 @@ export class AdminController {
       data,
       statusCode: 200,
       message: '조회에 성공했습니다',
+    });
+  }
+
+  @Get('/student/search')
+  async searchStudent(@Headers('access_token') token: string, @Query('keyword') keyword: string) {
+    const data = await this.adminService.searchStudent(token, keyword);
+
+    return Object.assign({
+      data,
+      statusCode: 200,
+      message: '학생 조회에 성공했습니다',
     });
   }
 }
