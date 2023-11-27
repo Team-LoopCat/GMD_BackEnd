@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Headers, Param, Patch, Post } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { UpdateDiviceDto } from './dto/updateDivice.dto';
-import { CreateStudentDto } from './dto/createStudentDto';
+import { CreateStudentDto } from './dto/createStudent.dto';
 
 @Controller('/admin')
 export class AdminController {
