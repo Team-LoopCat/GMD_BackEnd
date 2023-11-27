@@ -67,13 +67,16 @@ export class AdminService {
   }
 
   async addStudent(token: string, studentDto: CreateStudentDto): Promise<object> {
-    const { stuID, stuName, gender } = studentDto;
+    const { stuID, stuName, gender, boxID } = studentDto;
 
     const user = await this.userService.validateAccess(token);
     if (user.role != 'admin') throw new ForbiddenException('어드민 계정이 아님');
 
-    const thisStudent = await this.student.findOneBy({ stuID });
-    if (thisStudent) throw new ConflictException('이미 같은 학번의 학생이 존재합니다.');
+    const IDStudent = await this.student.findOneBy({ stuID });
+    if (IDStudent) throw new ConflictException('이미 같은 학번의 학생이 존재합니다.');
+
+    const boxStudent = await this.student.findOneBy({ stuID });
+    if (boxStudent) throw new ConflictException('이미 같은 사물함을 가진 학생이 존재합니다.');
 
     const newStudent = await this.student.save({
       stuID,
