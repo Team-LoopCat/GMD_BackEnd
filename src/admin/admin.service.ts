@@ -1,12 +1,13 @@
 import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Student } from './entities/student.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Divice } from './entities/divice.entity';
 import { DiviceStatus } from './entities/diviceStatus.entity';
 import { UserService } from 'src/user/user.service';
 import { UpdateDiviceDto } from './dto/updateDivice.dto';
-import { CreateStudentDto } from './dto/createStudentDto';
+import { CreateStudentDto } from './dto/createStudent.dto';
+import { ChangeChackerDto } from './dto/changeChacker.dto';
 
 @Injectable()
 export class AdminService {
@@ -105,5 +106,19 @@ export class AdminService {
     if (!thisDiviceStatus) throw new NotFoundException('존재하지 않는 학생');
 
     return thisDiviceStatus;
+  }
+
+  async searchStudent(token: string, keyword: string): Promise<object> {
+    const user = await this.userService.validateAccess(token);
+    if (user.role != 'admin') throw new ForbiddenException('admin이 아님');
+
+    // 사물함 번호일 시
+    if (Number(keyword)) {
+      return await this.student.find({ where: { boxID: Number(keyword) } });
+    }
+    // 학생 이름일시
+    else {
+      return await this.student.find({ where: { stuName: Like(`%${keyword}%`) } });
+    }
   }
 }
