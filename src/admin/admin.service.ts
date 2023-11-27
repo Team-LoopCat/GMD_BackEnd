@@ -1,4 +1,4 @@
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Student } from './entities/student.entity';
 import { Like, Repository } from 'typeorm';
@@ -8,6 +8,7 @@ import { UserService } from 'src/user/user.service';
 import { UpdateDiviceDto } from './dto/updateDivice.dto';
 import { CreateStudentDto } from './dto/createStudent.dto';
 import { ChangeChackerDto } from './dto/changeChacker.dto';
+import { Chacker } from 'src/chacker/entities/chacker.entity';
 
 @Injectable()
 export class AdminService {
@@ -15,6 +16,7 @@ export class AdminService {
     @InjectRepository(DiviceStatus) private diviceStatus: Repository<DiviceStatus>,
     @InjectRepository(Student) private student: Repository<Student>,
     @InjectRepository(Divice) private divice: Repository<Divice>,
+    @InjectRepository(Chacker) private readonly chacker: Repository<Chacker>,
     private readonly userService: UserService,
   ) {}
 
@@ -123,5 +125,21 @@ export class AdminService {
     else {
       return await this.student.find({ where: { stuName: Like(`%${keyword}%`) } });
     }
+  }
+
+  async changeChacker(token: string, chakerDto: ChangeChackerDto) {
+    const { grade, students, gender, date } = chakerDto;
+
+    const user = await this.userService.validateAccess(token);
+    if (user.role != 'admin') throw new ForbiddenException('admin이 아님');
+
+    if (grade > 3 || grade < 1) throw new BadRequestException('학년 정보가 잘못되었습니다.');
+
+    const studentsData = students.split(',').filter((student) => student.length > 0);
+    while (studentsData.length < 2) studentsData.push('지정되지 않음'); // 2명 이하라면 '지정되지 않음' 채우기
+
+    const chakers = await this.chacker.find({ where: { grade, gender, date } });
+    await this.chacker.update({ chackerID: chakers[0].chackerID }, { name: studentsData[0] });
+    await this.chacker.update({ chackerID: chakers[1].chackerID }, { name: studentsData[1] });
   }
 }

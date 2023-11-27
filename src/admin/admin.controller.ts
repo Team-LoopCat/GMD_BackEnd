@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Headers, Param, Patch, Post, Query } fro
 import { AdminService } from './admin.service';
 import { UpdateDiviceDto } from './dto/updateDivice.dto';
 import { CreateStudentDto } from './dto/createStudent.dto';
+import { ChangeChackerDto } from './dto/changeChacker.dto';
 
 @Controller('/admin')
 export class AdminController {
@@ -78,6 +79,16 @@ export class AdminController {
       data,
       statusCode: 200,
       message: '학생 조회에 성공했습니다',
+    });
+  }
+
+  @Patch('/student/chacker')
+  async changeChacker(@Headers('access_token') token: string, @Body() changeChackerDto: ChangeChackerDto) {
+    await this.adminService.changeChacker(token, changeChackerDto);
+
+    return Object.assign({
+      statusCode: 200,
+      messge: '폰검 변경에 성공했습니다',
     });
   }
 }
