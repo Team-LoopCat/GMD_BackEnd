@@ -3,6 +3,7 @@ import { AdminService } from './admin.service';
 import { UpdateDiviceDto } from './dto/updateDivice.dto';
 import { CreateStudentDto } from './dto/createStudent.dto';
 import { ChangeChackerDto } from './dto/changeChacker.dto';
+import { UpdateStudentDto } from './dto/updateStudent.dto';
 
 @Controller('/admin')
 export class AdminController {
@@ -100,6 +101,16 @@ export class AdminController {
       data,
       statusCode: 200,
       message: '폰검학생 조회 성공',
+    });
+  }
+
+  @Patch('/student/:stuID')
+  async updateStudent(@Headers('access_token') token: string, @Param('stuID') stuID: number, @Body() updateStudentDto: UpdateStudentDto) {
+    await this.adminService.changeStudentData(token, stuID, updateStudentDto);
+
+    return Object.assign({
+      statusCode: 200,
+      message: '요청에 성공했습니다.',
     });
   }
 }
