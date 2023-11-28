@@ -10,6 +10,7 @@ import { CreateStudentDto } from './dto/createStudent.dto';
 import { ChangeChackerDto } from './dto/changeChacker.dto';
 import { Chacker } from 'src/chacker/entities/chacker.entity';
 import { UpdateStudentDto } from './dto/updateStudent.dto';
+import { ChangeStatusDto } from './dto/changeStatus.dto';
 
 @Injectable()
 export class AdminService {
@@ -179,5 +180,17 @@ export class AdminService {
     const students = this.student.find({ where: { status: filterKey } });
 
     return students;
+  }
+
+  async changeStatus(token: string, stuID: number, statusDto: ChangeStatusDto) {
+    const { status } = statusDto;
+
+    const user = await this.userService.validateAccess(token);
+    if (user.role != 'admin') throw new ForbiddenException('admin이 아님');
+
+    const thisStudent = await this.student.findOneBy({ stuID });
+    if (!thisStudent) throw new NotFoundException('찾을 수 없는 학생');
+
+    await this.student.update(stuID, { status });
   }
 }

@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Headers, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Head, Headers, Param, Patch, Post, Query } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { UpdateDiviceDto } from './dto/updateDivice.dto';
 import { CreateStudentDto } from './dto/createStudent.dto';
 import { ChangeChackerDto } from './dto/changeChacker.dto';
 import { UpdateStudentDto } from './dto/updateStudent.dto';
+import { ChangeStatusDto } from './dto/changeStatus.dto';
 
 @Controller('/admin')
 export class AdminController {
@@ -122,6 +123,16 @@ export class AdminController {
       data,
       statusCode: 200,
       message: '필터링 성공',
+    });
+  }
+
+  @Patch('/student/divicestatus/:stuID')
+  async changeStatus(@Headers('access_token') token: string, @Param('stuID') stuID: number, @Body() changeStatusDto: ChangeStatusDto) {
+    await this.adminService.changeStatus(token, stuID, changeStatusDto);
+
+    return Object.assign({
+      statusCode: 200,
+      message: '학생 상태 변경 성공',
     });
   }
 }
