@@ -113,4 +113,15 @@ export class AdminController {
       message: '요청에 성공했습니다.',
     });
   }
+
+  @Get('/student/filter/:filterKey')
+  async filterStudent(@Headers('access_token') token: string, @Param('filterKey') filterKey: string) {
+    const data = await this.adminService.filterStudent(token, filterKey);
+
+    return Object.assign({
+      data,
+      statusCode: 200,
+      message: '필터링 성공',
+    });
+  }
 }

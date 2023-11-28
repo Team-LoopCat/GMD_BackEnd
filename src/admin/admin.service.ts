@@ -156,7 +156,7 @@ export class AdminService {
     await this.chacker.update({ chackerID: chakers[1].chackerID }, { name: studentsData[1] });
   }
 
-  async getChackers(token: string) {
+  async getChackers(token: string): Promise<object> {
     const user = await this.userService.validateAccess(token);
     if (user.role != 'admin') throw new ForbiddenException('admin이 아님');
 
@@ -170,5 +170,14 @@ export class AdminService {
     else {
       return await this.chacker.find({ where: { date: 'weekend' } });
     }
+  }
+
+  async filterStudent(token: string, filterKey: string): Promise<object> {
+    const user = await this.userService.validateAccess(token);
+    if (user.role != 'admin') throw new ForbiddenException('admin이 아님');
+
+    const students = this.student.find({ where: { status: filterKey } });
+
+    return students;
   }
 }
