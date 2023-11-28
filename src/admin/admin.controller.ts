@@ -91,4 +91,15 @@ export class AdminController {
       messge: '폰검 변경에 성공했습니다',
     });
   }
+
+  @Get('/student/chacker')
+  async getChacker(@Headers('access_token') token: string) {
+    const data = await this.adminService.getChackers(token);
+
+    return Object.assign({
+      data,
+      statusCode: 200,
+      message: '폰검학생 조회 성공',
+    });
+  }
 }

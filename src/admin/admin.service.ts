@@ -142,4 +142,20 @@ export class AdminService {
     await this.chacker.update({ chackerID: chakers[0].chackerID }, { name: studentsData[0] });
     await this.chacker.update({ chackerID: chakers[1].chackerID }, { name: studentsData[1] });
   }
+
+  async getChackers(token: string) {
+    const user = await this.userService.validateAccess(token);
+    if (user.role != 'admin') throw new ForbiddenException('admin이 아님');
+
+    const today = new Date().getDay();
+
+    // 월 ~ 목, 일요일일 경우
+    if (today < 5 || today == 7) {
+      return await this.chacker.find({ where: { date: 'weekday' } });
+    }
+    // 금 ~ 토요일인 경우
+    else {
+      return await this.chacker.find({ where: { date: 'weekend' } });
+    }
+  }
 }
