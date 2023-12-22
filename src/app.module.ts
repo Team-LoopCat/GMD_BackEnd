@@ -25,14 +25,6 @@ configDotenv();
       entities: [__dirname + '/../**/entities/*.js'],
       timezone: 'Asia/Seoul',
     }),
-    RedisModule.forRoot({
-      readyLog: true,
-      config: {
-        host: process.env.REDIS_HOST,
-        port: Number(process.env.REDIS_PORT),
-        password: process.env.REDIS_PW,
-      },
-    }),
     UserModule,
     AdminModule,
     ChackerModule,
