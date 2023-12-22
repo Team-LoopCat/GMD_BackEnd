@@ -52,15 +52,12 @@ export class UserService {
 
     const accessToken = await this.createAccess(payload);
 
-    await this.redis.set(`${user.userID}accessToken`, accessToken);
-
     return { accessToken };
   }
 
   // 로그아웃
   async logout(token: string) {
-    const { userID } = await this.validateAccess(token);
-    await this.redis.del(`${userID}accessToken`);
+    await this.validateAccess(token);
   }
 
   // access-token 생성
@@ -74,6 +71,8 @@ export class UserService {
 
   // 토큰 검증
   async validateAccess(token: string): Promise<UserPayload> {
+    token = token.split(' ')[1];
+
     const userData = await this.jwt.verify(token, {
       secret: process.env.SECRET,
     });
