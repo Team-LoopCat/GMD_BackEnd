@@ -4,8 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { configDotenv } from 'dotenv';
 import { AdminModule } from './admin/admin.module';
+import { ChackerModule } from './chacker/chacker.module';
 
-configDotenv()
+configDotenv();
 
 @Module({
   imports: [
@@ -16,7 +17,11 @@ configDotenv()
       username: process.env.USERNAME,
       password: process.env.PW,
       database: process.env.DB_NAME,
-      synchronize: false,
+      synchronize: true,
+      logging: false,
+      migrations: [__dirname + '/../**/migrations/*.js'],
+      migrationsTableName: 'migrations',
+      autoLoadEntities: true,
       entities: [__dirname + '/../**/entities/*.js'],
       timezone: 'Asia/Seoul',
     }),
@@ -30,6 +35,7 @@ configDotenv()
     }),
     UserModule,
     AdminModule,
+    ChackerModule,
   ],
 })
 export class AppModule {}

@@ -9,14 +9,14 @@ export class DiviceStatus {
   stuID: number;
 
   @Column({ default: true })
-  phone: number;
+  phone: boolean;
 
   @Column({ default: true })
-  personalLaptop: number;
+  personalLabtop: boolean;
 
   @Column({ default: true })
-  schoolLaptop: number;
+  schoolLabtop: boolean;
 
   @Column({ default: true })
-  tablet: number;
+  tablet: boolean;
 }

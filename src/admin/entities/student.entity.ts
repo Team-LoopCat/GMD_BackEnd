@@ -17,5 +17,8 @@ export class Student {
   gender: number;
 
   @Column()
+  grade: number;
+
+  @Column()
   boxID: number;
 }

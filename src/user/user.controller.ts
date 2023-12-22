@@ -14,8 +14,8 @@ export class UserController {
     return Object.assign({
       data,
       statusCode: 201,
-      message: "계정 생성에 성공했습니다 (서버 관리자 기능이므로 발견하셨다면 관리자에게 연락 부탁드립니다)"
-    })
+      message: '계정 생성에 성공했습니다 (서버 관리자 기능이므로 발견하셨다면 관리자에게 연락 부탁드립니다)',
+    });
   }
 
   @Post('/login')
