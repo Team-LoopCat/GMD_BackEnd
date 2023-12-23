@@ -15,7 +15,7 @@ export class ChackerService {
   ) {}
 
   async getBoxList(grade: number, token: string) {
-    this.userService.validateAccess(token);
+    await this.userService.validateAccess(token);
 
     const boxs = await this.student.findBy({ grade });
 
@@ -23,7 +23,7 @@ export class ChackerService {
   }
 
   async getBoxInfo(boxID: number, token: string): Promise<Object> {
-    this.userService.validateAccess(token);
+    await this.userService.validateAccess(token);
 
     const box = await this.student.findOneBy({ boxID });
     const status = await this.diviceStatus.findOneBy({ stuID: box.stuID });
@@ -34,7 +34,7 @@ export class ChackerService {
   async changeStatus(boxID: number, token: string, updateStatusDto: UpdateStatusDto) {
     const { schoolLabtop, personalLabtop, tablet, phone } = updateStatusDto;
 
-    this.userService.validateAccess(token);
+    await this.userService.validateAccess(token);
 
     const stu = await this.student.findOneBy({ boxID });
     await this.diviceStatus.update({ stuID: stu.stuID }, { schoolLabtop, personalLabtop, tablet, phone });
