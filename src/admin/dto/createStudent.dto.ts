@@ -11,5 +11,8 @@ export class CreateStudentDto {
   gender: number;
 
   @IsNumber()
+  grade: number;
+
+  @IsNumber()
   boxID: number;
 }

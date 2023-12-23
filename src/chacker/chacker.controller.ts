@@ -8,10 +8,10 @@ export class ChackerController {
 
   @Get('/list/:grade')
   async getBoxList(@Param('grade') grade: number, @Headers('access_token') token: string) {
-    const data = await this.chackerService.getBoxList(grade, token);
+    const boxs = await this.chackerService.getBoxList(grade, token);
 
     return Object.assign({
-      data,
+      boxs,
       statusCode: 200,
       message: '리스트 조회 성공',
     });
@@ -19,10 +19,11 @@ export class ChackerController {
 
   @Get('/info/:boxID')
   async getBoxInfo(@Param('boxID') boxID: number, @Headers('access_token') token: string) {
-    const data = await this.chackerService.getBoxInfo(boxID, token);
+    const [box, status] = await this.chackerService.getBoxInfo(boxID, token);
 
     return Object.assign({
-      data,
+      box,
+      status,
       statusCode: 200,
       message: '박스 조회 성공',
     });

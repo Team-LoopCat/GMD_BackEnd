@@ -22,13 +22,13 @@ export class ChackerService {
     return boxs;
   }
 
-  async getBoxInfo(boxID: number, token: string): Promise<Object> {
+  async getBoxInfo(boxID: number, token: string) {
     await this.userService.validateAccess(token);
 
     const box = await this.student.findOneBy({ boxID });
     const status = await this.diviceStatus.findOneBy({ stuID: box.stuID });
 
-    return { box, status };
+    return [box, status];
   }
 
   async changeStatus(boxID: number, token: string, updateStatusDto: UpdateStatusDto) {

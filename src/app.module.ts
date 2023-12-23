@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { configDotenv } from 'dotenv';
 import { AdminModule } from './admin/admin.module';
 import { ChackerModule } from './chacker/chacker.module';

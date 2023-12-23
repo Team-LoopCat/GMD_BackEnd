@@ -20,10 +20,10 @@ export class UserController {
 
   @Post('/login')
   async login(@Body() loginDto: LoginDto) {
-    const data = await this.userService.login(loginDto);
+    const accessToken = await this.userService.login(loginDto);
 
     return Object.assign({
-      data,
+      accessToken,
       statusCode: 200,
       message: '로그인 성공',
     });

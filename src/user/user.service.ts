@@ -36,7 +36,7 @@ export class UserService {
   }
 
   // 로그인
-  async login(userDto: LoginDto): Promise<object> {
+  async login(userDto: LoginDto): Promise<string> {
     const { userName, password } = userDto;
 
     const user = await this.userEntity.findOneBy({ userName });
@@ -49,7 +49,7 @@ export class UserService {
 
     const accessToken = await this.createAccess(payload);
 
-    return { accessToken };
+    return accessToken;
   }
 
   // 로그아웃
