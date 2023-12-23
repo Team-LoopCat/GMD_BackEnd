@@ -68,7 +68,8 @@ export class UserService {
 
   // 토큰 검증
   async validateAccess(token: string): Promise<UserPayload> {
-    if (token) token = token.split(' ')[1];
+    if (!token) throw new BadRequestException('토큰 필요');
+    token = token.split(' ')[1];
 
     const userData = await this.jwt.verify(token, {
       secret: process.env.SECRET,
