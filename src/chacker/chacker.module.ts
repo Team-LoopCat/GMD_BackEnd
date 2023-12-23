@@ -10,7 +10,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Student, DiviceStatus, Chacker, User])],
+  imports: [
+    TypeOrmModule.forFeature([Student, DiviceStatus, Chacker, User]),
+    JwtModule.register({
+      secret: process.env.SECRET,
+      signOptions: {
+        expiresIn: '4h',
+      },
+      verifyOptions: {
+        complete: false,
+      },
+    }),
+  ],
   controllers: [ChackerController],
   providers: [ChackerService, UserService],
 })

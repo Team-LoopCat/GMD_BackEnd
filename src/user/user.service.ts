@@ -7,13 +7,10 @@ import { UserPayload } from './dto/userPayload.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/createUser.dto';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
-import { Redis } from 'ioredis';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRedis() private readonly redis: Redis,
     @InjectRepository(User) private userEntity: Repository<User>,
     private jwt: JwtService,
   ) {}
